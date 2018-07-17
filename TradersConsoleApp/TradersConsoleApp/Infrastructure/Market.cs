@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TradersConsoleApp.Abstract;
+using TradersConsoleApp.Properties;
 using TradersConsoleApp.Strategies;
 
 namespace TradersConsoleApp.Infrastructure
@@ -13,13 +14,17 @@ namespace TradersConsoleApp.Infrastructure
 
         public Market()
         {
-            for (var i = 0; i < 9; ++i) _traders.Add(new Trader(new AltruistStategy()));
-            for (var i = 0; i < 9; ++i) _traders.Add(new Trader(new CheaterStategy()));
-            for (var i = 0; i < 9; ++i) _traders.Add(new Trader(new MimicStrategy()));
-            for (var i = 0; i < 9; ++i) _traders.Add(new Trader(new RandomStrategy()));
-            for (var i = 0; i < 9; ++i) _traders.Add(new Trader(new OffensiveStrategy()));
-            for (var i = 0; i < 9; ++i) _traders.Add(new Trader(new FiveCounterStrategy()));
-            //for (var i = 0; i < 8; ++i) _traders.Add(new Trader(new StangeStrategy()));
+            for (var idx = 0; idx < Settings.Default.TraderNumber; idx++)
+            {
+                _traders.Add(new Trader(new AltruistStategy()));
+                _traders.Add(new Trader(new CheaterStategy()));
+                _traders.Add(new Trader(new MimicStrategy()));
+                _traders.Add(new Trader(new RandomStrategy()));
+                _traders.Add(new Trader(new OffensiveStrategy()));
+                _traders.Add(new Trader(new FiveCounterStrategy()));
+                // _traders.Add(new Trader(new StangeStrategy()));
+            }
+
         }
 
         public void NextYear()
@@ -39,9 +44,15 @@ namespace TradersConsoleApp.Infrastructure
 
             _traders.Sort((a, b) => b.Income.CompareTo(a.Income));
 
-            for (var i = 0; i < 12; ++i) _traders[_traders.Count - i - 1] = _traders[i].Clone();
+            for (var i = 0; i < _traders.Count * Settings.Default.TraderPercentToKillOff; ++i)
+            {
+                _traders[_traders.Count - i - 1] = _traders[i].Clone();
+            }
 
-            foreach (var a in _traders) a.NextYear();
+            foreach (var a in _traders)
+            {
+                a.NextYear();
+            }
         }
         public IEnumerator<Trader> GetEnumerator() => _traders.Cast<Trader>().GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

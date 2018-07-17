@@ -3,11 +3,11 @@ using TradersConsoleApp.Infrastructure;
 
 namespace TradersConsoleApp.Strategies
 {
-    public class StangeStrategy : Strategy
+    public class StrangeStrategy : Strategy
     {
         private int _lostTimes = 1;
 
-        public override Strategy Clone() => new StangeStrategy();
+        public override Strategy Clone() => new StrangeStrategy();
 
         public override bool NextTurn(Trader partner)
         {
